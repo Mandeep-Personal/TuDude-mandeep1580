@@ -15,6 +15,8 @@ class itemListTableViewController: UITableViewController {
   
     override func viewDidLoad() {
         super.viewDidLoad()
+      
+        loadItems()
 
     }
 
@@ -31,7 +33,7 @@ class itemListTableViewController: UITableViewController {
     
     let alertAction = UIAlertAction(title: "Done", style: .default) { (_) in
       let newItem = Item(context: self.context)
-      if let text = tempTextField.text {
+      if let text = tempTextField.text, text != "" {
         newItem.title = text
         newItem.completed = false
         
@@ -77,5 +79,17 @@ class itemListTableViewController: UITableViewController {
       print ("Error in saving the items!")
     }
     tableView.reloadData()
+  }
+  
+  func loadItems(){
+    let request: NSFetchRequest<Item> = Item.fetchRequest()
+    
+    do {
+      items = try context.fetch(request)
+    } catch {
+      print("Error fetching the items: \(error)")
+    }
+    tableView.reloadData()
+    
   }
 }
