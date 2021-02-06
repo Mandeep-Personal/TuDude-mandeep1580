@@ -7,8 +7,11 @@
 
 import UIKit
 import CoreData
+import SwipeCellKit
 
-class itemListTableViewController: UITableViewController {
+class itemListTableViewController: UITableViewController, SwipeTableViewCellDelegate {
+ 
+  
 
   let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var items = [Item]()
@@ -17,6 +20,7 @@ class itemListTableViewController: UITableViewController {
         super.viewDidLoad()
       
         loadItems()
+      tableView.rowHeight = 80.0
 
     }
 
@@ -62,7 +66,8 @@ class itemListTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as! SwipeTableViewCell
+        cell.delegate = self
 
         // Configure the cell...
       let item = items[indexPath.row]
@@ -70,7 +75,26 @@ class itemListTableViewController: UITableViewController {
       cell.accessoryType = item.completed ? .checkmark : .none
         return cell
     }
+  
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    items[indexPath.row].completed = !items[indexPath.row].completed
+    saveItems()
 
+  }
+
+  func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+    guard orientation == .right else {return nil}
+    let deleteAction = SwipeAction(style: .destructive, title: "Delete") { (_, indexPath) in
+      self.context.delete(self.items[indexPath.row])
+      self.items.remove(at: indexPath.row)
+      self.saveItems()
+    }
+    
+    deleteAction.image = UIImage(named: "trash")
+
+    return [deleteAction]
+    
+  }
   
   func saveItems() {
     do {
