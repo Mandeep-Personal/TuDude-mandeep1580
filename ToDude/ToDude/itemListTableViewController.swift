@@ -9,10 +9,8 @@ import UIKit
 import CoreData
 import SwipeCellKit
 
-class itemListTableViewController: UITableViewController, SwipeTableViewCellDelegate {
+class itemListTableViewController: UITableViewController {
  
-  
-
   let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var items = [Item]()
   
@@ -24,7 +22,6 @@ class itemListTableViewController: UITableViewController, SwipeTableViewCellDele
 
     }
 
-  
   @IBAction func addButtonTapped(_ sender: UIBarButtonItem) {
     
     let alertController = UIAlertController(
@@ -82,19 +79,7 @@ class itemListTableViewController: UITableViewController, SwipeTableViewCellDele
 
   }
 
-  func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-    guard orientation == .right else {return nil}
-    let deleteAction = SwipeAction(style: .destructive, title: "Delete") { (_, indexPath) in
-      self.context.delete(self.items[indexPath.row])
-      self.items.remove(at: indexPath.row)
-      self.saveItems()
-    }
-    
-    deleteAction.image = UIImage(named: "trash")
-
-    return [deleteAction]
-    
-  }
+  // MARK: - Helper Functions
   
   func saveItems() {
     do {
@@ -116,4 +101,23 @@ class itemListTableViewController: UITableViewController, SwipeTableViewCellDele
     tableView.reloadData()
     
   }
+}
+
+
+extension itemListTableViewController: SwipeTableViewCellDelegate {
+  
+  func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+    guard orientation == .right else {return nil}
+    let deleteAction = SwipeAction(style: .destructive, title: "Delete") { (_, indexPath) in
+      self.context.delete(self.items[indexPath.row])
+      self.items.remove(at: indexPath.row)
+      self.saveItems()
+    }
+    
+    deleteAction.image = UIImage(named: "trash")
+
+    return [deleteAction]
+    
+  }
+  
 }
