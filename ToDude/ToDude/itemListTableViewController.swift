@@ -14,11 +14,14 @@ class itemListTableViewController: UITableViewController {
   let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var items = [Item]()
   
+  var category: Category?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
       
         loadItems(search: nil)
       tableView.rowHeight = 80.0
+      self.title = category?.name
 
     }
 
@@ -37,6 +40,7 @@ class itemListTableViewController: UITableViewController {
       if let text = tempTextField.text, text != "" {
         newItem.title = text
         newItem.completed = false
+        newItem.category = self.category
         
         self.items.append(newItem)
         
@@ -93,13 +97,22 @@ class itemListTableViewController: UITableViewController {
   func loadItems(search: String?){
     let request: NSFetchRequest<Item> = Item.fetchRequest()
     
+    let predicate: NSCompoundPredicate
+    
+    
+    
+    let categoryPredicate = NSPredicate(format: "category.name MATCHES %@", category?.name ?? "")
     if let searchText = search {
-      let predicate = NSPredicate(format: "title CONTAINS[c] %@", searchText)
-      request.predicate = predicate
+      let searchPredicate = NSPredicate(format: "title CONTAINS[c] %@", searchText)
+     predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, searchPredicate])
       let sortDescriptor = NSSortDescriptor(key: "title", ascending: true)
       request.sortDescriptors = [sortDescriptor]
+    } else {
+      predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate])
     }
    
+    request.predicate = predicate
+    
     do {
       items = try context.fetch(request)
     } catch {

@@ -73,6 +73,17 @@ class CategoryListTableViewController: UITableViewController {
         return cell
     }
   
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    performSegue(withIdentifier: "showItems", sender: self)
+  }
+  
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if let destination = segue.destination as? itemListTableViewController,
+       let index = tableView.indexPathForSelectedRow?.row {
+      destination.category = categories[index]
+    }
+  }
+  
   // MARK: - Helper Functions
   
   func saveCategories() {
