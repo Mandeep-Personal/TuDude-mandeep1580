@@ -17,7 +17,7 @@ class itemListTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
       
-        loadItems()
+        loadItems(search: nil)
       tableView.rowHeight = 80.0
 
     }
@@ -90,9 +90,16 @@ class itemListTableViewController: UITableViewController {
     tableView.reloadData()
   }
   
-  func loadItems(){
+  func loadItems(search: String?){
     let request: NSFetchRequest<Item> = Item.fetchRequest()
     
+    if let searchText = search {
+      let predicate = NSPredicate(format: "title CONTAINS[c] %@", searchText)
+      request.predicate = predicate
+      let sortDescriptor = NSSortDescriptor(key: "title", ascending: true)
+      request.sortDescriptors = [sortDescriptor]
+    }
+   
     do {
       items = try context.fetch(request)
     } catch {
@@ -121,3 +128,14 @@ extension itemListTableViewController: SwipeTableViewCellDelegate {
   }
   
 }
+
+extension itemListTableViewController: UISearchBarDelegate {
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    if searchText.count > 0 {
+      loadItems(search: searchText)
+    }
+    else if searchText.count == 0 {
+      loadItems(search: nil)
+    }
+  }
+  }

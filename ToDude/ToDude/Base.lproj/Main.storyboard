@@ -15,9 +15,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" id="Qt7-OM-HhP">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <textInputTraits key="textInputTraits"/>
+                            <connections>
+                                <outlet property="delegate" destination="w0C-2R-A4B" id="eA1-F8-HD3"/>
+                            </connections>
+                        </searchBar>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="itemCell" id="Wqc-5M-Qal" customClass="SwipeTableViewCell" customModule="SwipeCellKit">
-                                <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                <rect key="frame" x="0.0" y="72" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Wqc-5M-Qal" id="wED-TS-8WL">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -27,7 +35,7 @@
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="w0C-2R-A4B" id="CRb-HK-r9G"/>
-                            <outlet property="delegate" destination="w0C-2R-A4B" id="Gk1-iZ-47x"/>
+                            <outlet property="delegate" destination="w0C-2R-A4B" id="fBM-R1-9T7"/>
                         </connections>
                     </tableView>
                     <toolbarItems/>
